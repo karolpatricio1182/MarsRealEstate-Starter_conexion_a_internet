@@ -17,11 +17,16 @@
 
 package com.example.android.marsrealestate
 
+import android.view.View
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.android.marsrealestate.network.MarsProperty
+import com.example.android.marsrealestate.overview.MarsApiStatus
+import com.example.android.marsrealestate.overview.PhotoGridAdapter
 
 //aqui se encontraran los adaptadores de enlace
 /*
@@ -47,3 +52,46 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
     }
 
 }
+/*
+BindingAdapter para inicializar PhotoGridAdapter con la lista de objetos MarsProperty.
+El uso de BindingAdapter para configurar los datos de RecyclerView hace que el enlace de datos observe
+automáticamente LiveData para la lista de objetos MarsProperty.  Luego, el adaptador de enlace se llama
+automáticamente cuando cambia la lista MarsProperty.
+
+ */
+@BindingAdapter("listData")
+fun bindRecyclerView(recyclerView: RecyclerView,
+                     data: List<MarsProperty>?) {
+    val adapter = recyclerView.adapter as PhotoGridAdapter
+    adapter.submitList(data)//Esto le dice a RecyclerView cuando hay una nueva lista disponible.
+
+
+}
+
+//adaptador de enlace llamado bindStatus() que toma un valor de ImageView y MarsApiStatus como argumentos.
+@BindingAdapter("marsApiStatus")
+fun bindStatus(statusImageView: ImageView,
+               status: MarsApiStatus?) {
+    when (status) {
+        MarsApiStatus.LOADING -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.loading_animation)
+        }
+        MarsApiStatus.LOADING -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.loading_animation)
+        }
+        MarsApiStatus.ERROR -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.ic_connection_error)
+        }
+        MarsApiStatus.DONE -> {
+            statusImageView.visibility = View.GONE
+        }
+
+
+    }
+
+}
+
+
