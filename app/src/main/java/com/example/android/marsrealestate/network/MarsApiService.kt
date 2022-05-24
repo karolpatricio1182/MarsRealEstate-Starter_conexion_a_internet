@@ -40,9 +40,12 @@ private val retrofit = Retrofit.Builder()
 //interfaz que define como es que retrofit se comunica con el servidor, en este caso sera mediante solicitudes http y get cuando se solicite
 interface MarsApiService {
     @GET("realestate")
-    fun getProperties()://este metodo obtiene la respuesta JSON, y el get le dice que haga este metodo,
-            Call<List<MarsProperty>>//devuelve una lista de objetos
+    suspend fun getProperties(): List<MarsProperty>//este metodo obtiene la respuesta JSON, y el get le dice que haga este metodo,
+
 }
+
+
+
 
 
 //Ahora, una vez que se haya realizado toda la configuración, cada vez que su aplicación llame a MarsApi.retrofitService, obtendrá un objeto Singleton Retrofit que implementa MarsApiService.

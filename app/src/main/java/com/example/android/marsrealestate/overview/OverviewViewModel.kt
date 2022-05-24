@@ -20,8 +20,10 @@ package com.example.android.marsrealestate.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
 import com.example.android.marsrealestate.network.MarsProperty
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +33,10 @@ import retrofit2.Response
  */
 class OverviewViewModel : ViewModel() {
 
+    private val _property = MutableLiveData<MarsProperty>()
+
+    val property: LiveData<MarsProperty>
+        get() = _property
     // The internal MutableLiveData String that stores the most recent response
     private val _response = MutableLiveData<String>()
 
@@ -47,23 +53,21 @@ class OverviewViewModel : ViewModel() {
 
     //este metodo es el que llamara al servicio retrofit y manejara la cadena JSON
     private fun getMarsRealEstateProperties() {
-        MarsApi.retrofitService.getProperties().enqueue(
-            object: Callback<List<MarsProperty>> {
-                // La devolución de llamada onResponse() se llama cuando la solicitud es exitosa y el servicio web devuelve una respuesta.
-                override fun onResponse(call: Call<List<MarsProperty>>, response: Response<List<MarsProperty>>) {
-                    /*
-                    Debido a que response.body() ahora es una lista de objetos MarsProperty, el tamaño de esa lista es la cantidad de propiedades que
-                    se analizaron.  Este mensaje de respuesta imprime esa cantidad de propiedades:
-                     */
-                    _response.value =
-                        "Success: ${response.body()?.size} Mars properties retrieved"
+        viewModelScope.launch {
+            try {
+                val listResult = MarsApi.retrofitService.getProperties()
+                _response.value = "Success: ${listResult.size} Mars properties retrieved"
+                if (listResult.size > 0) {//establece el valor del livedata en la primera posision
+                    _property.value = listResult[0]
+                }
 
-                }
-                //La devolución de llamada onFailure() se llama cuando falla la respuesta del servicio web.  Para esta respuesta, establezca el estado de _response en "Error: " concatenado con el mensaje del argumento Throwable.
-                override fun onFailure(call: Call<List<MarsProperty>>, t: Throwable) {
-                    _response.value = "Failure: " + t.message
-                }
-            })
+
+            } catch (e: Exception) {
+                _response.value = "Failure: ${e.message}"
+            }
+
+        }
+
 
     }
 }
