@@ -20,21 +20,50 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="property"
             type="com.example.android.marsrealestate.network.MarsProperty" />
+        <!--
+        Las importaciones se utilizan cuando desea utilizar componentes de una clase dentro de una expresión de enlace de datos en
+        un archivo de diseño.  En este caso, utilizará las constantes View.GONE y View.VISIBLE, por lo que necesita acceso a
+        la clase View.
 
+        -->
+        <import type="android.view.View" />
     </data>
-    <ImageView
-        android:id="@+id/mars_image"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:padding="2dp"
-        tools:src="@tools:sample/backgrounds/scenic"
-        app:imageUrl="@{property.imgSrcUrl}" />
+        android:layout_height="170dp">
 
 
+        <ImageView
+            android:id="@+id/mars_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{property.imgSrcUrl}"
+            tools:src="@tools:sample/backgrounds/scenic" />
+        <!--
+        Esta imagen tendra el signo de dolar
+
+        -->
+        <ImageView
+            android:id="@+id/mars_property_type"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom|end"
+            android:adjustViewBounds="true"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_for_sale_outline"
+            tools:src="@drawable/ic_for_sale_outline"
+            android:visibility="@{property.rental ? View.GONE : View.VISIBLE}"/>
+
+    </FrameLayout>
 </layout>

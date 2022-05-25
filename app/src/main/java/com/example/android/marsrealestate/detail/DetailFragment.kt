@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 
 /**
@@ -34,6 +35,10 @@ class DetailFragment : Fragment() {
         val application = requireNotNull(activity).application
         val binding = FragmentDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
+        val marsProperty = DetailFragmentArgs.fromBundle(requireArguments()).selectedProperty//Esta línea obtiene el objeto MarsProperty seleccionado de Safe Args.
+        val viewModelFactory = DetailViewModelFactory(marsProperty, application)// obtener una instancia de DetailViewModel.  La aplicación de inicio incluye una implementación de DetailViewModelFactory, por lo que  tiene que hacer aquí es inicializarla.
+        binding.viewModel = ViewModelProvider(
+            this, viewModelFactory).get(DetailViewModel::class.java)
         return binding.root
     }
 }

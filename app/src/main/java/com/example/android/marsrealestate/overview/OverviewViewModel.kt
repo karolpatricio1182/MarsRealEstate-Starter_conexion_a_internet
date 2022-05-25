@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -36,7 +37,9 @@ enum class MarsApiStatus { LOADING, ERROR, DONE }//esto va a representar todos l
 class OverviewViewModel : ViewModel() {
 
     private val _properties = MutableLiveData<List<MarsProperty>>()
-
+    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty>
+        get() = _navigateToSelectedProperty
 
     val properties: LiveData<List<MarsProperty>>
         get() = _properties
@@ -51,15 +54,16 @@ class OverviewViewModel : ViewModel() {
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)//muestra todas las propiedades cuando la aplicación se carga por primera vez.
+
     }
 
     //este metodo es el que llamara al servicio retrofit y manejara la cadena JSON
-    private fun getMarsRealEstateProperties() {
+    private fun getMarsRealEstateProperties(filter: MarsApiFilter) {
         viewModelScope.launch {
             _status.value = MarsApiStatus.LOADING
             try {
-                _properties.value = MarsApi.retrofitService.getProperties()
+                _properties.value = MarsApi.retrofitService.getProperties(filter.value)
                 _status.value = MarsApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = MarsApiStatus.ERROR
@@ -71,5 +75,19 @@ class OverviewViewModel : ViewModel() {
         }
 
 
+    }
+    fun updateFilter(filter: MarsApiFilter) {//toma un argumento MarsApiFilter y llame a getMarsRealEstateProperties() con ese argumento.
+        getMarsRealEstateProperties(filter)
+    }
+    fun displayPropertyDetails(marsProperty: MarsProperty) {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+        /*
+        Anula el valor de _navigateToSelectedProperty.
+        Necesita esto para marcar el estado de navegación como completo y para evitar que la navegación se active
+        nuevamente cuando el usuario regrese de la vista de detalles.
+         */
+    fun displayPropertyDetailsComplete() {
+        _navigateToSelectedProperty.value = null
     }
 }

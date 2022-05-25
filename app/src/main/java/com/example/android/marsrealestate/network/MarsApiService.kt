@@ -23,7 +23,12 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Query
 
+enum class MarsApiFilter(val value: String) {//constantes que coinciden con los valores de consulta que espera el servicio web.
+    SHOW_RENT("rent"),
+    SHOW_BUY("buy"),
+    SHOW_ALL("all") }
 private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com/"
 
 private val moshi = Moshi.Builder()
@@ -40,7 +45,7 @@ private val retrofit = Retrofit.Builder()
 //interfaz que define como es que retrofit se comunica con el servidor, en este caso sera mediante solicitudes http y get cuando se solicite
 interface MarsApiService {
     @GET("realestate")
-    suspend fun getProperties(): List<MarsProperty>//este metodo obtiene la respuesta JSON, y el get le dice que haga este metodo,
+    suspend fun getProperties(@Query("filter") type: String): List<MarsProperty>//este metodo obtiene la respuesta JSON, y el get le dice que haga este metodo.@Query le dice al método getProperties() (y, por lo tanto, a Retrofit) que realice la solicitud de servicio web con la opción de filtro.  Cada vez que se llama a getProperties(), la URL de solicitud incluye la parte ?filter=type, que indica al servicio web que responda con resultados que coincidan con esa consulta.
 
 }
 

@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/irons/AndroidStudioProjects/MarsRealEstate-Starter/app/src/main/res/layout/activity_main.xml" value="0.29528985507246375" />
+        <entry key="..\:/Users/irons/AndroidStudioProjects/MarsRealEstate-Starter/app/src/main/res/layout/fragment_detail.xml" value="0.2" />
         <entry key="..\:/Users/irons/AndroidStudioProjects/MarsRealEstate-Starter/app/src/main/res/layout/fragment_overview.xml" value="0.29528985507246375" />
         <entry key="..\:/Users/irons/AndroidStudioProjects/MarsRealEstate-Starter/app/src/main/res/layout/grid_view_item.xml" value="0.16485507246376813" />
+        <entry key="..\:/Users/irons/AndroidStudioProjects/MarsRealEstate-Starter/app/src/main/res/menu/overflow_menu.xml" value="0.2" />
       </map>
     </option>
   </component>
